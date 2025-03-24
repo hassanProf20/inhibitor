@@ -1,34 +1,36 @@
 name: Build Kivy APK
 
-on: [push]  # يعمل عند كل رفع (push) للمستودع
+on: [push]
 
 jobs:
   build:
-    runs-on: ubuntu-latest  # يستخدم خادم Ubuntu
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4  # يحمل ملفات المشروع
+        uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9'  # يستخدم Python 3.9
+          python-version: '3.9'
 
       - name: Install system dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y git unzip python3-pip zlib1g-dev
+          sudo apt-get install -y git unzip python3-pip zlib1g-dev build-essential python3-dev
 
-      - name: Install Buildozer
-        run: pip install buildozer
+      - name: Install Cython and Buildozer
+        run: |
+          pip install cython==0.29.36
+          pip install buildozer
 
       - name: Build APK
         run: |
-          buildozer -v android debug  # بناء APK
+          buildozer -v android debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: app-debug.apk
-          path: bin/*.apk  # رفع APK كملف قابل للتنزيل
+          path: bin/*.apk
