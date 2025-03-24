@@ -15,15 +15,27 @@ jobs:
         with:
           python-version: '3.9'
 
-      - name: Install system dependencies
+      - name: Install Android SDK and AIDL
         run: |
           sudo apt-get update
           sudo apt-get install -y git unzip python3-pip zlib1g-dev build-essential python3-dev
+          
+          # تنزيل وتثبيت Android Command Line Tools
+          wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
+          unzip commandlinetools-linux-*.zip -d cmdline-tools
+          mv cmdline-tools/cmdline-tools cmdline-tools/latest
+          
+          # إعداد متغيرات البيئة
+          echo "$PWD/cmdline-tools/latest/bin" >> $GITHUB_PATH
+          echo "ANDROID_SDK_ROOT=$PWD" >> $GITHUB_ENV
+          
+          # قبول التراخيص وتثبيت حزم Android المطلوبة
+          yes | sdkmanager --licenses
+          sdkmanager "build-tools;34.0.0" "platform-tools" "platforms;android-34" "cmdline-tools;latest"
 
-      - name: Install Cython and Buildozer
+      - name: Install Buildozer dependencies
         run: |
-          pip install cython==0.29.36
-          pip install buildozer
+          pip install cython==0.29.36 buildozer
 
       - name: Build APK
         run: |
