@@ -28,7 +28,7 @@ jobs:
           buildozer -v android debug  # بناء APK
 
       - name: Upload APK
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: app-debug.apk
           path: bin/*.apk  # رفع APK كملف قابل للتنزيل
