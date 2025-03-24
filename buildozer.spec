@@ -2,6 +2,8 @@
 
 target = android
 
+android.skip_update = true
+
 # (str) Title of your application
 title = Inhibitor
 
